@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  web:
+    image: webdevops/php-nginx:8.2
+    container_name: magento-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./magento:/var/www/html
+    depends_on:
+      - db
+      - elasticsearch
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/html/pub
+    working_dir: /var/www/html
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magentopass
+    command: --log_bin_trust_function_creators=1
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+
+volumes:
+  dbdata:

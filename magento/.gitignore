@@ -1,0 +1,6 @@
+magento/vendor/
+magento/var/
+magento/pub/static/*
+magento/pub/media/*
+magento/generated/
+magento/*.log
